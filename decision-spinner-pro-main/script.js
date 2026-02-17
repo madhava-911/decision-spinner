@@ -1,161 +1,93 @@
-// =====================
-// STATE
-// =====================
-const state = {
-  options: [],
-  history: [],
-  angle: 0,
-  spinning: false
-};
-
-// =====================
-// ELEMENTS
-// =====================
 const canvas = document.getElementById("wheel");
 const ctx = canvas.getContext("2d");
-const resultEl = document.getElementById("result");
-const historyList = document.getElementById("historyList");
-const optionText = document.getElementById("optionText");
-const optionWeight = document.getElementById("optionWeight");
 
-// =====================
-// COLORS
-// =====================
-const colors = ["#00e5ff", "#ff2fd1", "#7c7cff", "#22c55e", "#f97316"];
+let options = [];
+let startAngle = 0;
+let spinning = false;
 
-// =====================
-// DRAW WHEEL
-// =====================
+function addOption() {
+  const text = document.getElementById("optionText").value.trim();
+  const weight = parseInt(document.getElementById("optionWeight").value);
+
+  if (!text || weight < 1) return;
+
+  options.push({ text, weight });
+  document.getElementById("optionText").value = "";
+  drawWheel();
+}
+
 function drawWheel() {
+  const totalWeight = options.reduce((sum, o) => sum + o.weight, 0);
+  let angle = startAngle;
+
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  if (state.options.length === 0) return;
 
-  const total = state.options.reduce((s, o) => s + o.weight, 0);
-  let start = state.angle;
-
-  state.options.forEach((opt, i) => {
-    const slice = (opt.weight / total) * Math.PI * 2;
+  options.forEach((option, index) => {
+    const sliceAngle = (option.weight / totalWeight) * 2 * Math.PI;
 
     ctx.beginPath();
     ctx.moveTo(160, 160);
-    ctx.arc(160, 160, 150, start, start + slice);
-    ctx.fillStyle = colors[i % colors.length];
+    ctx.arc(160, 160, 150, angle, angle + sliceAngle);
+    ctx.fillStyle = `hsl(${index * 60}, 70%, 50%)`;
     ctx.fill();
+    ctx.stroke();
 
     ctx.save();
     ctx.translate(160, 160);
-    ctx.rotate(start + slice / 2);
-    ctx.fillStyle = "#fff";
-    ctx.font = "14px system-ui";
+    ctx.rotate(angle + sliceAngle / 2);
     ctx.textAlign = "right";
-    ctx.fillText(opt.text, 140, 5);
+    ctx.fillStyle = "#fff";
+    ctx.fillText(option.text, 140, 10);
     ctx.restore();
 
-    start += slice;
+    angle += sliceAngle;
   });
 }
 
-// =====================
-// ADD OPTION
-// =====================
-function addOption() {
-  const text = optionText.value.trim();
-  const weight = Number(optionWeight.value);
-
-  if (!text || weight < 1) return;
-  if (state.options.some(o => o.text === text)) return;
-
-  state.options.push({ text, weight });
-  optionText.value = "";
-  drawWheel();
-}
-
-// =====================
-// SPIN
-// =====================
 function spin() {
-  if (state.spinning || state.options.length < 2) return;
+  if (spinning || options.length === 0) return;
 
-  state.spinning = true;
-  let velocity = Math.random() * 25 + 20;
+  spinning = true;
+  const spinAngle = Math.random() * 2000 + 2000;
+  let currentSpin = 0;
 
-  function animate() {
-    velocity *= 0.97;
-    state.angle += velocity * 0.01;
+  const interval = setInterval(() => {
+    currentSpin += 20;
+    startAngle += 0.2;
     drawWheel();
 
-    if (velocity > 0.5) {
-      requestAnimationFrame(animate);
-    } else {
-      state.spinning = false;
-      resolveResult();
+    if (currentSpin >= spinAngle) {
+      clearInterval(interval);
+      spinning = false;
+      showResult();
     }
-  }
-
-  animate();
+  }, 20);
 }
 
-// =====================
-// RESULT
-// =====================
-function resolveResult() {
-  const total = state.options.reduce((s, o) => s + o.weight, 0);
+function showResult() {
+  const totalWeight = options.reduce((sum, o) => sum + o.weight, 0);
+  let random = Math.random() * totalWeight;
 
-  // Normalize angle:
-  // - Canvas starts at 3 o'clock
-  // - Pointer is at 12 o'clock
-  // - Rotation is clockwise
-  const angle =
-    (Math.PI * 1.5 - (state.angle % (2 * Math.PI)) + 2 * Math.PI) %
-    (2 * Math.PI);
-
-  let accumulated = 0;
-
-  for (const opt of state.options) {
-    const slice = (opt.weight / total) * Math.PI * 2;
-    accumulated += slice;
-
-    if (angle <= accumulated) {
-      resultEl.textContent = `🎯 ${opt.text}`;
-      state.history.unshift(opt.text);
-      state.history = state.history.slice(0, 10);
-      renderHistory();
+  for (let option of options) {
+    if (random < option.weight) {
+      document.getElementById("result").innerText = option.text;
+      addToHistory(option.text);
       return;
     }
+    random -= option.weight;
   }
 }
 
-
-// =====================
-// HISTORY
-// =====================
-function renderHistory() {
-  historyList.innerHTML = state.history
-    .map(item => `<li>${item}</li>`)
-    .join("");
+function addToHistory(text) {
+  const li = document.createElement("li");
+  li.textContent = text;
+  document.getElementById("historyList").appendChild(li);
 }
 
-// =====================
-// RESET
-// =====================
 function resetAll() {
-  state.options = [];
-  state.history = [];
-  state.angle = 0;
-  drawWheel();
-  renderHistory();
-  resultEl.textContent = "Waiting for decision…";
+  options = [];
+  document.getElementById("historyList").innerHTML = "";
+  document.getElementById("result").innerText = "Waiting for decision…";
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-// =====================
-// EXPOSE FUNCTIONS (CRITICAL FIX)
-// =====================
-window.addOption = addOption;
-window.spin = spin;
-window.resetAll = resetAll;
-
-// =====================
-// INIT
-// =====================
-drawWheel();
-renderHistory();
