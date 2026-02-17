@@ -1,0 +1,153 @@
+:root {
+  --bg: #05060a;
+  --card: #0b0f1a;
+  --text: #e5e7eb;
+
+  --neon-blue: #00e5ff;
+  --neon-pink: #ff2fd1;
+  --neon-purple: #7c7cff;
+  --danger: #ff4d4d;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: radial-gradient(circle at top, #0a0f2c, #05060a);
+  color: var(--text);
+}
+
+/* === Layout === */
+.app {
+  max-width: 420px;
+  margin: auto;
+  padding: 20px;
+}
+
+/* === Neon Card === */
+.neon-card {
+  background: var(--card);
+  border-radius: 14px;
+  box-shadow:
+    0 0 20px rgba(0, 229, 255, 0.15),
+    inset 0 0 20px rgba(124, 124, 255, 0.05);
+}
+
+/* === Header === */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* === Text Effects === */
+.neon-text {
+  color: var(--neon-blue);
+  text-shadow:
+    0 0 6px rgba(0, 229, 255, 0.8),
+    0 0 14px rgba(0, 229, 255, 0.6);
+}
+
+.neon-text-soft {
+  color: var(--neon-purple);
+  text-shadow: 0 0 6px rgba(124, 124, 255, 0.6);
+}
+
+/* === Controls === */
+.controls {
+  display: flex;
+  gap: 6px;
+  margin: 15px 0;
+}
+
+input {
+  flex: 1;
+  padding: 8px;
+  background: #020617;
+  border: 1px solid rgba(0, 229, 255, 0.3);
+  color: white;
+  border-radius: 6px;
+  outline: none;
+}
+
+input:focus {
+  border-color: var(--neon-blue);
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.6);
+}
+
+/* === Buttons === */
+.neon-btn {
+  background: transparent;
+  color: var(--neon-blue);
+  border: 1px solid var(--neon-blue);
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  text-shadow: 0 0 6px rgba(0, 229, 255, 0.8);
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.4);
+  transition: 0.2s ease;
+}
+
+.neon-btn:hover {
+  background: var(--neon-blue);
+  color: #020617;
+  box-shadow:
+    0 0 15px rgba(0, 229, 255, 0.9),
+    0 0 30px rgba(0, 229, 255, 0.6);
+}
+
+.neon-btn-danger {
+  border-color: var(--danger);
+  color: var(--danger);
+  box-shadow: 0 0 10px rgba(255, 77, 77, 0.5);
+}
+
+.neon-btn-danger:hover {
+  background: var(--danger);
+  color: #020617;
+}
+
+/* === Wheel === */
+.wheel-container {
+  position: relative;
+  margin: 15px 0;
+}
+
+canvas {
+  border-radius: 50%;
+  box-shadow:
+    0 0 20px rgba(0, 229, 255, 0.4),
+    0 0 40px rgba(255, 47, 209, 0.2);
+}
+
+/* === Pointer === */
+.pointer {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 22px;
+}
+
+/* === Spin Button === */
+.spin-btn {
+  width: 100%;
+  margin: 10px 0;
+  font-size: 18px;
+}
+
+/* === History === */
+.history ul {
+  padding: 0;
+  margin: 10px 0;
+}
+
+.history li {
+  list-style: none;
+  font-size: 14px;
+  opacity: 0.85;
+  padding: 4px 0;
+}

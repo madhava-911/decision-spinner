@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Decision Spinner Pro</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <main class="app neon-card">
+    <header>
+      <h1 class="neon-text">🎡 Decision Spinner</h1>
+      <button id="themeToggle" class="neon-btn">🌙</button>
+    </header>
+
+    <section class="controls">
+      <input id="optionText" placeholder="Option name"/>
+      <input id="optionWeight" type="number" min="1" value="1"/>
+      <button onclick="addOption()" class="neon-btn">Add</button>
+    </section>
+
+    <section class="wheel-container">
+      <canvas id="wheel" width="320" height="320"></canvas>
+      <div class="pointer neon-text">▼</div>
+    </section>
+
+    <button class="spin-btn neon-btn" onclick="spin()">SPIN</button>
+
+    <section class="result">
+      <h2 id="result" class="neon-text-soft">Waiting for decision…</h2>
+    </section>
+
+    <section class="history">
+      <h3 class="neon-text-soft">🕘 Recent Decisions</h3>
+      <ul id="historyList"></ul>
+      <button class="clear neon-btn-danger" onclick="resetAll">Reset</button>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
