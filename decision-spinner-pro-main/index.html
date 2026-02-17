@@ -22,22 +22,23 @@
 
     <section class="wheel-container">
       <canvas id="wheel" width="320" height="320"></canvas>
-      <div class="pointer neon-text">▼</div>
+      <div class="pointer">▼</div>
     </section>
 
     <button class="spin-btn neon-btn" onclick="spin()">SPIN</button>
 
     <section class="result">
-      <h2 id="result" class="neon-text-soft">Waiting for decision…</h2>
+      <h2 id="result">Waiting for decision…</h2>
     </section>
 
     <section class="history">
-      <h3 class="neon-text-soft">🕘 Recent Decisions</h3>
+      <h3>🕘 Recent Decisions</h3>
       <ul id="historyList"></ul>
-      <button class="clear neon-btn-danger" onclick="resetAll">Reset</button>
+      <button class="clear neon-btn-danger" onclick="resetAll()">Reset</button>
     </section>
   </main>
 
   <script src="script.js"></script>
 </body>
 </html>
+
